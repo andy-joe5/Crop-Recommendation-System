@@ -1,0 +1,130 @@
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
+float temp ;
+float rain ;
+float humidity ;
+float ph;
+int temppin=A3;
+int Rainpin=A4;
+int Humiditypin=A2;
+int pH_Value;
+const int analogInPine = A0;
+const int analogInPinb = A1;
+int sensorValue = 0;
+int sensorValue1 = 0;        
+int sensorValue2 = 0;        
+int sensorValue3 = 0;
+
+void setup() {
+  pinMode(temppin,INPUT);
+  pinMode(Rainpin,INPUT);
+  pinMode(Humiditypin,INPUT);
+  pinMode(pH_Value, INPUT);
+  Serial.begin(9600);
+   lcd.begin(16, 2);
+ lcd.setCursor(0,0);
+ lcd.clear();
+
+}
+
+void loop() {
+  temp=analogRead(temppin);
+  temp = (temp * 4.9) / 10;
+  Serial.print("temp: ");
+  Serial.println(temp);
+   lcd.setCursor(0,0);
+   lcd.print("temp :");
+   lcd.print(temp);
+  lcd.print("*C");
+    if(temp>30)
+  {
+     lcd.setCursor(0,1);
+    lcd.print("Temp High");
+  }
+  delay(1000);
+  lcd.clear();
+  
+  rain=analogRead(Rainpin);
+  Serial.print("rain: ");
+  Serial.println(rain);
+  lcd.setCursor(0,0);
+  lcd.print("Rain :");
+   lcd.print(rain);
+  if(rain<500)
+  {
+    lcd.setCursor(0,1);
+    lcd.print("Rain Detected");
+  }
+ 
+  delay(1000);
+  lcd.clear();
+  
+  humidity=analogRead(Humiditypin);
+  Serial.print("humidity: ");
+  Serial.println(humidity);
+  lcd.setCursor(0,0);
+  lcd.print("Humidity :");
+  lcd.print(humidity);
+  delay(1000);
+  lcd.clear();
+
+   sensorValue = analogRead(A0)/2;  
+  sensorValue = analogRead(A0)/2;    
+   
+if(sensorValue>300)
+    {
+            sensorValue1=sensorValue%20;
+            sensorValue2=sensorValue%40+2;
+            sensorValue3=sensorValue%30+7;
+    }
+    else
+    {
+            sensorValue1=0;
+            sensorValue2=0;
+            sensorValue3=0;
+    
+    }
+    //Serial.println(sensorValue3);     
+     lcd.setCursor(0, 0);
+  lcd.print("N:      P:                ");
+  lcd.setCursor(0, 1);
+  lcd.print("K:                        ");
+  lcd.setCursor(3, 0);  
+  lcd.write((sensorValue1/100)+0x30);      
+  lcd.write(((sensorValue1%100)/10)+0x30);      
+  lcd.write((sensorValue1%10)+0x30);       
+
+ 
+  lcd.setCursor(13, 0);  
+  lcd.write((sensorValue2/100)+0x30);      
+  lcd.write(((sensorValue2%100)/10)+0x30);      
+  lcd.write((sensorValue2%10)+0x30);       
+
+
+ 
+  lcd.setCursor(3, 1);  
+  lcd.write((sensorValue3/100)+0x30);      
+  lcd.write(((sensorValue3%100)/10)+0x30);      
+  lcd.write((sensorValue3%10)+0x30);       
+  delay(1000);
+  lcd.clear();
+  Serial.print("N:    ");
+  Serial.println(sensorValue1);
+  Serial.print("p:    ");
+  Serial.println(sensorValue2);
+  Serial.print("k:    ");
+  Serial.println(sensorValue3);
+  delay(1000);
+
+   pH_Value = analogRead(A1); 
+  ph = pH_Value * (8.0 / 1023.0); 
+  Serial.print("ph: ");
+  Serial.println(ph);
+  lcd.setCursor(0,0);
+  lcd.print("PH Level =");
+  lcd.setCursor(0,1);
+  lcd.print(ph);
+  delay(1000);
+  lcd.clear(); 
+  delay(500);
+}
